@@ -3,12 +3,16 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         NavigationStack{
+            
+            
             Text("Welcome")
                 .font(.largeTitle)
             Text("Select Your Sport")
                 .font(.largeTitle)
             Text("(click the icon)")
                 .font(.title)
+            
+            
             
             
             
