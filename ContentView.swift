@@ -2,6 +2,9 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
+        NavigationStack{
+            
+        
       Text("Welcome")
             .font(.largeTitle)
         Text("Select Your Sport")
@@ -21,5 +24,7 @@ struct ContentView: View {
             
         }
        .font(.custom("football", fixedSize: 125))
+        
+        }
     }
 }
