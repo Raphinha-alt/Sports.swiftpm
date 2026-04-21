@@ -8,6 +8,6 @@ import SwiftUI
 
 struct BasketballRules : View {
     var body: some View {
-        
+        Text("Basketball Rules")
     }
 }
