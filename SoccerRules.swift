@@ -8,7 +8,8 @@ import SwiftUI
 
 struct RuleView: View {
     var body: some View {
-        
+      Text("Soccer Rules")
+            .font(.custom("football", fixedSize: 60))
         
         
         
