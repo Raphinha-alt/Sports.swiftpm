@@ -19,10 +19,10 @@ struct ContentView: View {
             VStack(spacing:50) {
                 
                 
-                Button("🏀") {
-                    
+                NavigationLink("🏀") {
+                    BasketballRules()
                 }
-                .font(.custom("basketball", fixedSize: 125))
+                .font(.custom("football", fixedSize: 125))
                 
                 
                 NavigationLink("⚽️") {
