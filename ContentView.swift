@@ -5,7 +5,10 @@ struct ContentView: View {
       Text("Welcome")
             .font(.largeTitle)
         Text("Select Your Sport")
+            .font(.largeTitle)
         Text("(click the icon)")
+            .font(.title)
+            
         
         
   
