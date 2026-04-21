@@ -4,28 +4,6 @@ struct ContentView: View {
     var body: some View {
         NavigationStack{
             
-        
-      Text("Welcome")
-            .font(.largeTitle)
-        Text("Select Your Sport")
-            .font(.largeTitle)
-        Text("(click the icon)")
-            .font(.title)
-            
-        
-        
-  
-        Button("🏀") {
-            
-        }
-        .font(.custom("basketball", fixedSize: 125))
-        
-       Button("⚽️") {
-            
-        }
-       .font(.custom("football", fixedSize: 125))
-        
-            
             
             Text("Welcome")
                 .font(.largeTitle)
@@ -36,23 +14,26 @@ struct ContentView: View {
             
             
             
-        VStack(spacing:50) {
             
             
-            Button("🏀") {
+            VStack(spacing:50) {
                 
-            }
-            .font(.custom("basketball", fixedSize: 125))
-            
-            Button("⚽️") {
                 
-            }
-            .font(.custom("football", fixedSize: 125))
-            
-            Button("⛳️") {
+                Button("🏀") {
+                    
+                }
+                .font(.custom("basketball", fixedSize: 125))
                 
+                Button("⚽️") {
+                    
+                }
+                .font(.custom("football", fixedSize: 125))
+                
+                Button("⛳️") {
+                    
+                }
+                .font(.custom("basketball", fixedSize: 125))
             }
-            .font(.custom("basketball", fixedSize: 125))
         }
     }
 }
