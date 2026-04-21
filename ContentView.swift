@@ -24,8 +24,9 @@ struct ContentView: View {
                 }
                 .font(.custom("basketball", fixedSize: 125))
                 
-                Button("⚽️") {
-                    
+                
+                NavigationLink("⚽️") {
+                    RuleView()
                 }
                 .font(.custom("football", fixedSize: 125))
                 
