@@ -25,6 +25,11 @@ struct ContentView: View {
                 
             }
             .font(.custom("football", fixedSize: 125))
+            
+            Button("⛳️") {
+                
+            }
+            .font(.custom("basketball", fixedSize: 125))
         }
     }
 }
