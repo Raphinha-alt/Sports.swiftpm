@@ -24,12 +24,14 @@ struct RuleView: View {
             Text("11. Fouls- an unfair physical infraction against an opponent, judged by the referee, resulting in a direct or indirect free kick (or penalty) for the opposing team")
         }
         HStack{
-            NavigationLink("Go back") {
+            NavigationLink("🏠") {
                 ContentView()
             }
-            NavigationLink("NextPage") {
+            .font(.custom("house", fixedSize:80))
+            NavigationLink("➡️") {
              Soccermore()
             }
+            .font(.custom("arrow", fixedSize: 80))
         }
     }
 }
