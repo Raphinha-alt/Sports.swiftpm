@@ -30,10 +30,11 @@ struct ContentView: View {
                 }
                 .font(.custom("football", fixedSize: 125))
                 
-                Button("⛳️") {
-                    
+                NavigationLink("⛳️") {
+                   GolfRules()
                 }
-                .font(.custom("basketball", fixedSize: 125))
+                .font(.custom("golfball", fixedSize: 125))
+                
             }
         }
     }
