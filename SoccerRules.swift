@@ -22,6 +22,7 @@ struct RuleView: View {
             Text("9. Sides- first 45 minutes each team starts on one side then switches after half time")
             Text("10. Cards- yellow and red, yellow is warning, red is out for the rest of the game and miss next game, back to back yellow misses the next game to")
             Text("11. Fouls- an unfair physical infraction against an opponent, judged by the referee, resulting in a direct or indirect free kick (or penalty) for the opposing team")
+            Text("12. Offside- An attacking player is in an offside position if they are nearer to the opponents’ goal line than both the ball and the second-to-last defender (usually the last defender, as the goalkeeper is the last) when the ball is played to them. Offside is only penalized if the player is actively involved in play—such as interfering with play, an opponent, or gaining an advantage—in the opposing half.")
         }
         HStack{
             NavigationLink("🏠") {

@@ -1,5 +1,5 @@
 //
-//  GolfGame.swift
+//  GameScene.swift
 //  Sports
 //
 //  Created by Oleksandr Andrusyshyn on 4/23/26.
@@ -7,8 +7,6 @@
 import SwiftUI
 import SpriteKit
 
-struct GolfGame: View {
-    var body: some View {
-        Text("Golf")
-    }
+class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
+    
 }
