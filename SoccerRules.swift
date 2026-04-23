@@ -23,5 +23,14 @@ struct RuleView: View {
             Text("10. Cards- yellow and red, yellow is warning, red is out for the rest of the game and miss next game, back to back yellow misses the next game to")
             Text("11. Fouls- an unfair physical infraction against an opponent, judged by the referee, resulting in a direct or indirect free kick (or penalty) for the opposing team")
         }
+        HStack{
+            NavigationLink("Go back") {
+                ContentView()
+            }
+            NavigationLink("NextPage") {
+             Soccermore()
+            }
+        }
     }
 }
+
