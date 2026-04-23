@@ -20,7 +20,8 @@ struct RuleView: View {
             Text("7. Throw in- teams recieves ball and throws in to a teammate, determined who kicked it out on the length side")
             Text("8. Corner Kick- kick from the corner of the field, determined if the ball was kicked out by the team on their own side")
             Text("9. Sides- first 45 minutes each team starts on one side then switches after half time")
-            Text("10. ")
+            Text("10. Cards- yellow and red, yellow is warning, red is out for the rest of the game and miss next game, back to back yellow misses the next game to")
+            Text("11. Fouls- an unfair physical infraction against an opponent, judged by the referee, resulting in a direct or indirect free kick (or penalty) for the opposing team")
         }
     }
 }
