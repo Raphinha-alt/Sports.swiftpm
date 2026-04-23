@@ -22,7 +22,7 @@ struct ContentView: View {
                 NavigationLink("🏀") {
                     BasketballRules()
                 }
-                .font(.custom("football", fixedSize: 125))
+                .font(.custom("basketball", fixedSize: 125))
                 
                 
                 NavigationLink("⚽️") {
