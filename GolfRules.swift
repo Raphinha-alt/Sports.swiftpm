@@ -56,9 +56,11 @@ struct GolfRules: View {
                 Putter: Short range hits on green to roll the ball into the hole.
                 """)
                 .font(.custom("", size: 14))
-                
             }
-            
+            NavigationLink("Go to golf game") {
+               GolfGame()
+            }
+            .font(.custom("golfball", fixedSize: 25))
         }
     }
 }
