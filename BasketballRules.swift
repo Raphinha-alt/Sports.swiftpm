@@ -37,5 +37,10 @@ struct BasketballRules : View {
         7. Game Length:
         Played in quarters. Team with most points wins.
         """)
+        
+        
+        NavigationLink("continue") {
+            PlayMaker()
+        }
     }
 }
