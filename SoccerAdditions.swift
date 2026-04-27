@@ -14,6 +14,19 @@ struct Soccermore: View {
         
             .padding()
         
+        VStack{
+            NavigationLink("🏆") {
+                SoccerComps()
+            }
+            .font(.custom("Trophy", fixedSize: 125))
+           
+            .padding(40)
+            NavigationLink("📖") {
+                SoccerHistory()
+            }
+            .font(.custom("History", fixedSize: 125))
+            
+        }
       
     }
 }
