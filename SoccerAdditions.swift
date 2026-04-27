@@ -50,7 +50,10 @@ struct Soccermore: View {
                         .frame(width: 250, height: 250)
                 }
             }
-            
+            NavigationLink("🏠") {
+                ContentView()
+            }
+            .font(.custom("house", fixedSize:90))
         }
       
     }
