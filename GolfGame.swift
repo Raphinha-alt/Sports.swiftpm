@@ -9,6 +9,8 @@ import SpriteKit
 
 struct GolfGame: View {
     var body: some View {
-        Text("Golf")
+        GeometryReader() { geometry in
+            SpriteView(scene: GameScene(size: geometry.size))
+        }
     }
 }
