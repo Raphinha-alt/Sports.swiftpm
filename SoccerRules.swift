@@ -29,6 +29,7 @@ struct RuleView: View {
                 ContentView()
             }
             .font(.custom("house", fixedSize:80))
+            .padding(40)
             NavigationLink("➡️") {
              Soccermore()
             }
