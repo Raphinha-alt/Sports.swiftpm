@@ -43,5 +43,25 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         
         addChild(ball)
         addChild(sand)
+        
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        
+        let velX = ball.physicsBody?.velocity.dx
+        let velY = ball.physicsBody?.velocity.dy
+        let vel = ball.physicsBody?.angularVelocity
+        
+        if ball.physicsBody?.angularVelocity ?? 0 <= 1, ball.physicsBody?.angularVelocity ?? 0 >= -1 {
+            
+            if ball.frame.contains(location) {
+                print("ang: \(vel)")
+            ball.physicsBody?.applyImpulse(CGVector(dx: 100, dy: 100))
+            }
+        } else {
+            print("else ang: \(vel)")
+        }
     }
 }
