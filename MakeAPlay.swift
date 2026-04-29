@@ -9,7 +9,11 @@ import SpriteKit
 
 struct MakeAPlay: View {
     var body: some View {
-        SpriteView(scene: BasketballGameScene())
-            .ignoresSafeArea()
+        SpriteView(
+            scene: BasketballGameScene(
+                size: CGSize(width: 390, height: 844)
+            )
+        )
+        .ignoresSafeArea()
     }
 }
