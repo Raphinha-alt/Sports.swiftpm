@@ -27,18 +27,19 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         ball.physicsBody?.friction = 1
         ball.physicsBody?.angularDamping = 1
         ball.physicsBody?.linearDamping = 1
-        ball.physicsBody?.restitution = 0.75
+        ball.physicsBody?.restitution = 0.7
         ball.physicsBody?.collisionBitMask = 1
         
 //        Sand Properties
         sand = SKShapeNode(rectOf: CGSize(width: 1000, height: 50))
         sand.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 1000, height: 50))
         sand.fillColor = .yellow
-        sand.position = CGPoint(x: size.width/2, y: 20)
+        sand.position = CGPoint(x: size.width/4, y: 50)
         sand.zRotation = 35
         
         sand.physicsBody?.isDynamic = false
         sand.physicsBody?.categoryBitMask = 1
+        sand.physicsBody?.friction = 1
         
         addChild(ball)
         addChild(sand)
