@@ -18,44 +18,46 @@ class BasketballGameScene: SKScene {
     var hoop = SKShapeNode(circleOfRadius: 15)
 
     var selectedPlayer: SKShapeNode?
-    var touchStartTime: TimeInterval = 0
+    var initialPositions: [CGPoint] = []
 
-    // Track play actions
-    enum Action {
-        case move(player: Int, position: CGPoint)
-        case pass(player: Int)
-        case shot
+    // TOUCH CONTROL
+    var touchStartLocation: CGPoint?
+    var didDrag = false
+
+    // RESULT UI
+    var resultLabel = SKLabelNode(text: "")
+
+    // MARK: - RECORDING
+    struct Frame {
+        let time: TimeInterval
+        let playerPositions: [CGPoint]
+        let ballPosition: CGPoint
     }
 
-    var recordedActions: [Action] = []
+    var frames: [Frame] = []
+    var recordStartTime: TimeInterval = 0
+    var isRecording = true
 
-    // MARK: - Defense
-    enum DefenseType: String, CaseIterable {
-        case man = "Man"
-        case zone23 = "2-3 Zone"
-        case zone32 = "3-2 Zone"
+    // MARK: - DEFENSE
+    enum DefenseType: CaseIterable {
+        case man, zone23, zone32
     }
 
     var currentDefense: DefenseType = .man
 
-    // UI
-    var mainButton: SKLabelNode!
-    var shootButton: SKLabelNode!
-    var simulateButton: SKLabelNode!
-
-    var dropdownOpen = false
-    var dropdownNodes: [SKLabelNode] = []
-
+    // MARK: - SETUP
     override func didMove(to view: SKView) {
         backgroundColor = .white
+
         drawCourt()
         createPlayers()
-        createDefense(type: currentDefense)
+        createDefense()
         createBall()
         createUI()
+
+        startRecording()
     }
 
-    // MARK: - Court
     func drawCourt() {
         let court = SKShapeNode(rectOf: CGSize(width: 350, height: 500))
         court.strokeColor = .black
@@ -63,12 +65,10 @@ class BasketballGameScene: SKScene {
         addChild(court)
 
         hoop.strokeColor = .orange
-        hoop.lineWidth = 4
         hoop.position = CGPoint(x: frame.midX, y: frame.maxY - 100)
         addChild(hoop)
     }
 
-    // MARK: - Players
     func createPlayers() {
         let positions = [
             CGPoint(x: frame.midX - 100, y: 250),
@@ -77,6 +77,8 @@ class BasketballGameScene: SKScene {
             CGPoint(x: frame.midX - 80, y: 450),
             CGPoint(x: frame.midX + 80, y: 450)
         ]
+
+        initialPositions = positions
 
         for (i, pos) in positions.enumerated() {
             let p = SKShapeNode(circleOfRadius: 20)
@@ -88,231 +90,300 @@ class BasketballGameScene: SKScene {
         }
     }
 
-    // MARK: - Defense
-    func createDefense(type: DefenseType) {
+    func createDefense() {
         defenders.forEach { $0.removeFromParent() }
         defenders.removeAll()
 
-        let positions: [CGPoint]
+        let cx = frame.midX
+        let topY = frame.midY + 120
+        let lowY = frame.midY - 120
 
-        switch type {
+        switch currentDefense {
+
         case .man:
-            positions = players.map { CGPoint(x: $0.position.x, y: $0.position.y + 60) }
-        case .zone23:
-            positions = [
-                CGPoint(x: frame.midX - 100, y: 400),
-                CGPoint(x: frame.midX + 100, y: 400),
-                CGPoint(x: frame.midX - 120, y: 520),
-                CGPoint(x: frame.midX, y: 520),
-                CGPoint(x: frame.midX + 120, y: 520)
-            ]
-        case .zone32:
-            positions = [
-                CGPoint(x: frame.midX - 120, y: 420),
-                CGPoint(x: frame.midX, y: 420),
-                CGPoint(x: frame.midX + 120, y: 420),
-                CGPoint(x: frame.midX - 80, y: 540),
-                CGPoint(x: frame.midX + 80, y: 540)
-            ]
-        }
+            for p in players {
+                let d = makeDefender()
+                d.position = CGPoint(x: p.position.x, y: p.position.y + 60)
+                addChild(d)
+                defenders.append(d)
+            }
 
-        for pos in positions {
-            let d = SKShapeNode(circleOfRadius: 20)
-            d.fillColor = defenseColor
-            d.position = pos
-            addChild(d)
-            defenders.append(d)
+        case .zone23:
+            let positions = [
+                CGPoint(x: cx - 80, y: topY),
+                CGPoint(x: cx + 80, y: topY),
+                CGPoint(x: cx - 100, y: lowY),
+                CGPoint(x: cx, y: lowY),
+                CGPoint(x: cx + 100, y: lowY)
+            ]
+            positions.forEach { addDefender($0) }
+
+        case .zone32:
+            let positions = [
+                CGPoint(x: cx - 100, y: topY),
+                CGPoint(x: cx, y: topY),
+                CGPoint(x: cx + 100, y: topY),
+                CGPoint(x: cx - 60, y: lowY),
+                CGPoint(x: cx + 60, y: lowY)
+            ]
+            positions.forEach { addDefender($0) }
         }
     }
 
-    // MARK: - Ball
+    func makeDefender() -> SKShapeNode {
+        let d = SKShapeNode(circleOfRadius: 20)
+        d.fillColor = defenseColor
+        return d
+    }
+
+    func addDefender(_ pos: CGPoint) {
+        let d = makeDefender()
+        d.position = pos
+        addChild(d)
+        defenders.append(d)
+    }
+
     func createBall() {
         ball.fillColor = ballColor
         ball.position = players[2].position
         addChild(ball)
     }
 
-    func passBall(to player: SKShapeNode, record: Bool = true) {
-        let move = SKAction.move(to: player.position, duration: 0.35)
-        ball.run(move)
-
-        if record, let index = players.firstIndex(of: player) {
-            recordedActions.append(.pass(player: index))
-        }
+    // MARK: - PASS
+    func passBall(to player: SKShapeNode) {
+        ball.run(SKAction.move(to: player.position, duration: 0.25))
     }
 
-    // MARK: - Shooting
+    // MARK: - SHOOT
     func shootBall() {
-        let target = hoop.position
+        guard let shooter = selectedPlayer ?? players.first else { return }
 
-        let arcUp = SKAction.moveBy(x: 0, y: 120, duration: 0.3)
-        let moveToHoop = SKAction.move(to: target, duration: 0.4)
+        ball.removeAllActions()
 
-        let shot = SKAction.sequence([arcUp, moveToHoop])
-        ball.run(shot)
+        let action = SKAction.move(to: hoop.position, duration: 0.4)
 
-        let made = evaluateShot()
+        ball.run(action) {
+            let (made, percent) = self.calculateShotSuccess(from: shooter)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-            print(made ? "SHOT MADE ✅" : "MISSED ❌")
-        }
-
-        recordedActions.append(.shot)
-    }
-
-    func evaluateShot() -> Bool {
-        // distance from hoop
-        let dx = ball.position.x - hoop.position.x
-        let dy = ball.position.y - hoop.position.y
-        let distance = sqrt(dx*dx + dy*dy)
-
-        // defender pressure
-        var pressure: CGFloat = 0
-        for d in defenders {
-            let dist = hypot(d.position.x - ball.position.x,
-                             d.position.y - ball.position.y)
-            if dist < 80 {
-                pressure += 0.2
+            if made {
+                self.resultLabel.text = "✅ MADE (\(Int(percent * 100))%)"
+                self.resultLabel.fontColor = .systemGreen
+            } else {
+                self.resultLabel.text = "❌ MISS (\(Int(percent * 100))%)"
+                self.resultLabel.fontColor = .systemRed
             }
         }
+    }
 
-        let baseChance = max(0.2, 1.0 - distance / 400)
-        let finalChance = baseChance - pressure
+    func calculateShotSuccess(from shooter: SKShapeNode) -> (Bool, CGFloat) {
 
-        return CGFloat.random(in: 0...1) < finalChance
+        let distance = hypot(
+            shooter.position.x - hoop.position.x,
+            shooter.position.y - hoop.position.y
+        )
+
+        var successRate: CGFloat = 0.75
+
+        successRate -= min(distance / 600, 0.4)
+
+        let nearest = defenders.map {
+            hypot($0.position.x - shooter.position.x,
+                  $0.position.y - shooter.position.y)
+        }.min() ?? 999
+
+        if nearest < 80 {
+            successRate -= 0.35
+        } else if nearest < 140 {
+            successRate -= 0.2
+        }
+
+        switch currentDefense {
+        case .man: successRate -= 0.05
+        case .zone23: successRate -= 0.1
+        case .zone32: successRate -= 0.12
+        }
+
+        successRate = max(0.05, min(0.95, successRate))
+
+        return (CGFloat.random(in: 0...1) < successRate, successRate)
+    }
+
+    // MARK: - RECORD
+    func startRecording() {
+        frames.removeAll()
+        recordStartTime = 0
+        isRecording = true
+    }
+
+    override func update(_ currentTime: TimeInterval) {
+
+        guard isRecording else { return }
+
+        if recordStartTime == 0 {
+            recordStartTime = currentTime
+        }
+
+        frames.append(Frame(
+            time: currentTime - recordStartTime,
+            playerPositions: players.map { $0.position },
+            ballPosition: ball.position
+        ))
+    }
+
+    // MARK: - SIMULATE
+    func simulatePlay() {
+
+        isRecording = false
+        ball.removeAllActions()
+
+        for (i, p) in players.enumerated() {
+            p.position = initialPositions[i]
+        }
+
+        ball.position = players[2].position
+        createDefense()
+
+        guard frames.count > 1 else { return }
+
+        var actions: [SKAction] = []
+
+        for i in 1..<frames.count {
+
+            let prev = frames[i - 1]
+            let curr = frames[i]
+            let duration = max(0.02, curr.time - prev.time)
+
+            let step = SKAction.run {
+
+                for (index, pos) in curr.playerPositions.enumerated() {
+                    self.players[index].position = pos
+                }
+
+                self.ball.position = curr.ballPosition
+            }
+
+            actions.append(step)
+            actions.append(SKAction.wait(forDuration: duration))
+        }
+
+        run(SKAction.sequence(actions))
+    }
+
+    // MARK: - RESET
+    func resetPlay() {
+        ball.removeAllActions()
+
+        for (i, p) in players.enumerated() {
+            p.position = initialPositions[i]
+        }
+
+        ball.position = players[2].position
+        createDefense()
+
+        resultLabel.text = ""
+        startRecording()
     }
 
     // MARK: - UI
     func createUI() {
-        mainButton = SKLabelNode(text: "Defense ▼")
-        mainButton.position = CGPoint(x: frame.midX, y: frame.minY + 40)
-        mainButton.name = "dropdown"
-        mainButton.fontColor = .black
-        addChild(mainButton)
+        makeButton("SHOOT", x: -130, name: "shoot")
+        makeButton("SIM", x: -40, name: "sim")
+        makeButton("RESET", x: 50, name: "reset")
+        makeButton("DEF", x: 140, name: "defense")
 
-        shootButton = SKLabelNode(text: "Shoot")
-        shootButton.position = CGPoint(x: frame.midX - 100, y: frame.minY + 40)
-        shootButton.name = "shoot"
-        shootButton.fontColor = .blue
-        addChild(shootButton)
-
-        simulateButton = SKLabelNode(text: "Simulate")
-        simulateButton.position = CGPoint(x: frame.midX + 100, y: frame.minY + 40)
-        simulateButton.name = "simulate"
-        simulateButton.fontColor = .purple
-        addChild(simulateButton)
+        resultLabel.fontSize = 18
+        resultLabel.fontColor = .black
+        resultLabel.position = CGPoint(x: frame.midX, y: frame.minY + 90)
+        addChild(resultLabel)
     }
 
-    func toggleDropdown() {
-        dropdownOpen.toggle()
-        dropdownNodes.forEach { $0.removeFromParent() }
-        dropdownNodes.removeAll()
+    func makeButton(_ text: String, x: CGFloat, name: String) {
+        let box = SKShapeNode(rectOf: CGSize(width: 85, height: 32))
+        box.fillColor = .darkGray
+        box.position = CGPoint(x: frame.midX + x, y: frame.minY + 50)
+        box.name = name
+        addChild(box)
 
-        if dropdownOpen {
-            for (i, type) in DefenseType.allCases.enumerated() {
-                let label = SKLabelNode(text: type.rawValue)
-                label.position = CGPoint(x: mainButton.position.x,
-                                         y: mainButton.position.y + CGFloat((i+1)*30))
-                label.name = "def_\(type.rawValue)"
-                label.fontColor = .darkGray
-                addChild(label)
-                dropdownNodes.append(label)
-            }
-        }
+        let label = SKLabelNode(text: text)
+        label.fontSize = 12
+        label.fontColor = .white
+        label.verticalAlignmentMode = .center
+        box.addChild(label)
     }
 
-    // MARK: - Simulation
-    func simulatePlay() {
-        var actions: [SKAction] = []
-
-        for act in recordedActions {
-            switch act {
-            case .pass(let index):
-                let move = SKAction.move(to: players[index].position, duration: 0.4)
-                actions.append(move)
-
-            case .move(_, let pos):
-                let move = SKAction.move(to: pos, duration: 0.4)
-                actions.append(move)
-
-            case .shot:
-                let shot = SKAction.move(to: hoop.position, duration: 0.5)
-                actions.append(shot)
-            }
-        }
-
-        ball.run(SKAction.sequence(actions))
-    }
-
-    // MARK: - Touches
+    // MARK: - TOUCH
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        touchStartTime = touch.timestamp
 
-        let location = touch.location(in: self)
-        let nodes = self.nodes(at: location)
+        guard let t = touches.first else { return }
+        let loc = t.location(in: self)
 
-        for node in nodes {
+        touchStartLocation = loc
+        didDrag = false
 
-            if node.name == "dropdown" {
-                toggleDropdown()
-                return
-            }
+        for node in nodes(at: loc) {
 
             if node.name == "shoot" {
                 shootBall()
                 return
             }
 
-            if node.name == "simulate" {
+            if node.name == "sim" {
                 simulatePlay()
                 return
             }
 
-            if let name = node.name, name.starts(with: "def_") {
-                let val = name.replacingOccurrences(of: "def_", with: "")
-                if let def = DefenseType(rawValue: val) {
-                    currentDefense = def
-                    createDefense(type: def)
-                }
-                toggleDropdown()
+            if node.name == "reset" {
+                resetPlay()
                 return
             }
 
-            if let shape = node as? SKShapeNode,
-               let name = shape.name,
-               name.contains("player_") {
-                selectedPlayer = shape
+            if node.name == "defense" {
+                cycleDefense()
+                return
+            }
+
+            if let p = node as? SKShapeNode,
+               node.name?.contains("player") == true {
+
+                selectedPlayer = p
                 return
             }
         }
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first,
-              let player = selectedPlayer else { return }
 
-        let location = touch.location(in: self)
-        player.position = location
+        guard let t = touches.first,
+              let start = touchStartLocation,
+              let p = selectedPlayer else { return }
 
-        if let index = players.firstIndex(of: player) {
-            recordedActions.append(.move(player: index, position: location))
+        let current = t.location(in: self)
+
+        if hypot(current.x - start.x, current.y - start.y) > 10 {
+            didDrag = true
+        }
+
+        if didDrag {
+            p.position = current
         }
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first,
-              let player = selectedPlayer else {
-            selectedPlayer = nil
-            return
-        }
 
-        let duration = touch.timestamp - touchStartTime
+        guard let p = selectedPlayer else { return }
 
-        if duration < 0.2 {
-            passBall(to: player)
+        if didDrag == false {
+            passBall(to: p)
         }
 
         selectedPlayer = nil
+    }
+
+    func cycleDefense() {
+        let all = DefenseType.allCases
+        if let index = all.firstIndex(of: currentDefense) {
+            currentDefense = all[(index + 1) % all.count]
+        }
+        createDefense()
     }
 }
