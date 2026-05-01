@@ -23,7 +23,7 @@ struct Soccermore: View {
                 NavigationLink("🏆") {
                     SoccerComps()
                 }
-                .font(.custom("Trophy", fixedSize: 125))
+                .font(.custom("Trophy", fixedSize: 155))
                 
                 .padding(100)
                 NavigationLink(destination: SoccerPlayers()) {
