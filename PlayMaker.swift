@@ -182,28 +182,39 @@ class BasketballGameScene: SKScene {
             shooter.position.y - hoop.position.y
         )
 
-        var successRate: CGFloat = 0.75
+        // Better base percentage
+        var successRate: CGFloat = 0.85
 
-        successRate -= min(distance / 600, 0.4)
+        // Distance penalty
+        let distancePenalty = min(distance / 900, 0.35)
+        successRate -= distancePenalty
 
+        // Defender pressure
         let nearest = defenders.map {
             hypot($0.position.x - shooter.position.x,
                   $0.position.y - shooter.position.y)
         }.min() ?? 999
 
-        if nearest < 80 {
-            successRate -= 0.35
-        } else if nearest < 140 {
-            successRate -= 0.2
+        if nearest < 60 {
+            successRate -= 0.30
+        } else if nearest < 120 {
+            successRate -= 0.18
+        } else if nearest < 180 {
+            successRate -= 0.08
         }
 
+        // Defense type effect
         switch currentDefense {
-        case .man: successRate -= 0.05
-        case .zone23: successRate -= 0.1
-        case .zone32: successRate -= 0.12
+        case .man:
+            successRate -= 0.04
+        case .zone23:
+            successRate -= 0.06
+        case .zone32:
+            successRate -= 0.08
         }
 
-        successRate = max(0.05, min(0.95, successRate))
+        // Clamp to realistic values
+        successRate = max(0.15, min(0.95, successRate))
 
         return (CGFloat.random(in: 0...1) < successRate, successRate)
     }
