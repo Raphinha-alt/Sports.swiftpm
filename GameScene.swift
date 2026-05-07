@@ -8,6 +8,10 @@ import SwiftUI
 import SpriteKit
 
 class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
+        
+    var powers: GolfGame?
+
+        
     var ball = SKShapeNode()
     var sand = SKShapeNode()
     var pointer = SKShapeNode()
@@ -69,14 +73,15 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
             if ball.frame.contains(location) {
                 print("ang: \(vel)")
                 
-                velX = CGFloat(cos(Double(pointer.zRotation)) * 100)
-                velY = CGFloat(sin(Double(pointer.zRotation)) * 100)
+                velX = CGFloat(cos(Double(pointer.zRotation)) * 20 * (powers?.power ?? 1))
+                velY = CGFloat(sin(Double(pointer.zRotation)) * 20 * (powers?.power ?? 1))
                 
             ball.physicsBody?.applyImpulse(CGVector(dx: velX, dy: velY))
                 
             }
         } else {
             print("else ang: \(vel)")
+            print("\(powers?.power)")
         }
     }
     
