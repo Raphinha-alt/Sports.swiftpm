@@ -5,6 +5,14 @@
 //  Created by Oskar Fabisiak on 4/23/26.
 //
 import SpriteKit
+import SwiftUI
+
+struct SavedPlay: Identifiable {
+    let id = UUID()
+    let name: String
+    let frames: [BasketballGameScene.Frame]
+    let defenseType: BasketballGameScene.DefenseType
+}
 
 class BasketballGameScene: SKScene {
 
@@ -26,6 +34,9 @@ class BasketballGameScene: SKScene {
 
     // RESULT UI
     var resultLabel = SKLabelNode(text: "")
+
+    // SAVED PLAYS
+    static var savedPlays: [SavedPlay] = []
 
     // MARK: - RECORDING
     struct Frame {
@@ -182,28 +193,34 @@ class BasketballGameScene: SKScene {
             shooter.position.y - hoop.position.y
         )
 
-        var successRate: CGFloat = 0.75
+        var successRate: CGFloat = 0.85
 
-        successRate -= min(distance / 600, 0.4)
+        let distancePenalty = min(distance / 900, 0.35)
+        successRate -= distancePenalty
 
         let nearest = defenders.map {
             hypot($0.position.x - shooter.position.x,
                   $0.position.y - shooter.position.y)
         }.min() ?? 999
 
-        if nearest < 80 {
-            successRate -= 0.35
-        } else if nearest < 140 {
-            successRate -= 0.2
+        if nearest < 60 {
+            successRate -= 0.30
+        } else if nearest < 120 {
+            successRate -= 0.18
+        } else if nearest < 180 {
+            successRate -= 0.08
         }
 
         switch currentDefense {
-        case .man: successRate -= 0.05
-        case .zone23: successRate -= 0.1
-        case .zone32: successRate -= 0.12
+        case .man:
+            successRate -= 0.04
+        case .zone23:
+            successRate -= 0.06
+        case .zone32:
+            successRate -= 0.08
         }
 
-        successRate = max(0.05, min(0.95, successRate))
+        successRate = max(0.15, min(0.95, successRate))
 
         return (CGFloat.random(in: 0...1) < successRate, successRate)
     }
@@ -230,6 +247,22 @@ class BasketballGameScene: SKScene {
         ))
     }
 
+    // MARK: - SAVE PLAY
+    func saveCurrentPlay() {
+
+        let playNumber = BasketballGameScene.savedPlays.count + 1
+
+        let newPlay = SavedPlay(
+            name: "Play \(playNumber)",
+            frames: frames,
+            defenseType: currentDefense
+        )
+
+        BasketballGameScene.savedPlays.append(newPlay)
+
+        resultLabel.text = "💾 Saved Play \(playNumber)"
+        resultLabel.fontColor = .systemBlue
+    }
     // MARK: - SIMULATE
     func simulatePlay() {
 
@@ -286,10 +319,11 @@ class BasketballGameScene: SKScene {
 
     // MARK: - UI
     func createUI() {
-        makeButton("SHOOT", x: -130, name: "shoot")
-        makeButton("SIM", x: -40, name: "sim")
-        makeButton("RESET", x: 50, name: "reset")
-        makeButton("DEF", x: 140, name: "defense")
+        makeButton("SHOOT", x: -170, name: "shoot")
+        makeButton("SIM", x: -80, name: "sim")
+        makeButton("RESET", x: 10, name: "reset")
+        makeButton("DEF", x: 100, name: "defense")
+        makeButton("SAVE", x: 190, name: "save")
 
         resultLabel.fontSize = 18
         resultLabel.fontColor = .black
@@ -342,6 +376,11 @@ class BasketballGameScene: SKScene {
                 return
             }
 
+            if node.name == "save" {
+                saveCurrentPlay()
+                return
+            }
+
             if let p = node as? SKShapeNode,
                node.name?.contains("player") == true {
 
@@ -387,3 +426,4 @@ class BasketballGameScene: SKScene {
         createDefense()
     }
 }
+
