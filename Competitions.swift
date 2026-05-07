@@ -13,7 +13,7 @@ struct SoccerComps: View {
     let myURL3 = URL(string: "https://en.wikipedia.org/wiki/UEFA_Conference_League")!
     let myURL4 = URL(string: "https://en.wikipedia.org/wiki/UEFA_Super_Cup")!
     let myURL5 = URL(string: "https://en.wikipedia.org/wiki/FIFA_Intercontinental_Cup")!
-    let myURL6 = URL(string: "https://www.fifa.com/en/tournaments/mens/club-world-cup/usa-2025")!
+    let myURL6 = URL(string: "https://en.wikipedia.org/wiki/UEFA_European_Championship")!
     let myURL7 = URL(string: "https://www.uefa.com")!
     var body: some View {
             VStack{
@@ -59,7 +59,7 @@ struct SoccerComps: View {
                             .frame(width: 250,height: 250)
                     }
                         Link(destination: myURL6) {
-                            Image("club")
+                            Image("Euros")
                                 .resizable()
                                 .frame(width: 250,height: 250)
                         }
