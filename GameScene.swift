@@ -8,9 +8,19 @@ import SwiftUI
 import SpriteKit
 
 class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
-        
-    var powers: GolfGame?
-
+    
+    @Binding var powers: CGFloat
+    
+    init(powers: Binding<CGFloat>, size: CGSize){
+        _powers = powers
+        super.init(size: size)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
         
     var ball = SKShapeNode()
     var sand = SKShapeNode()
@@ -68,20 +78,20 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         
         let vel = ball.physicsBody?.angularVelocity
         
-        if ball.physicsBody?.angularVelocity ?? 0 <= 1, ball.physicsBody?.angularVelocity ?? 0 >= -1 {
+        if ball.physicsBody?.angularVelocity ?? 0 <= 0.1, ball.physicsBody?.angularVelocity ?? 0 >= -0.1 {
             
             if ball.frame.contains(location) {
                 print("ang: \(vel)")
                 
-                velX = CGFloat(cos(Double(pointer.zRotation)) * 20 * (powers?.power ?? 1))
-                velY = CGFloat(sin(Double(pointer.zRotation)) * 20 * (powers?.power ?? 1))
+                velX = CGFloat(cos(Double(pointer.zRotation)) * 20 * (powers))
+                velY = CGFloat(sin(Double(pointer.zRotation)) * 20 * (powers))
                 
             ball.physicsBody?.applyImpulse(CGVector(dx: velX, dy: velY))
                 
             }
         } else {
             print("else ang: \(vel)")
-            print("\(powers?.power)")
+            print("\(powers)")
         }
     }
     

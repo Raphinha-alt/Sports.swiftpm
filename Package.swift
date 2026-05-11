@@ -17,6 +17,7 @@ let package = Package(
             name: "Sports",
             targets: ["AppModule"],
             bundleIdentifier: "org.jhhs827397.Sports",
+            teamIdentifier: "WBLL5628UG",
             displayVersion: "1.0",
             bundleVersion: "1",
             appIcon: .placeholder(icon: .running),
