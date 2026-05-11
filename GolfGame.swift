@@ -14,14 +14,14 @@ struct GolfGame: View {
     var body: some View {
         HStack {
             GeometryReader() { geometry in
-                SpriteView(scene: GameScene(size: geometry.size))
+                SpriteView(scene: GameScene(powers: $power, size: geometry.size))
             }
             
         }
         .toolbar {
             ToolbarItem(placement: .bottomBar){
                 
-                Slider(value: $power, in: 1...10) {_ in
+                Slider(value: $power, in: 1...10, step: 1.0) {_ in
                     print("\(power)")
                 }
             }
