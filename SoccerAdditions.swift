@@ -38,8 +38,8 @@ struct Soccermore: View {
         
         VStack{
             HStack{
-            NavigationLink("📖") {
-                SoccerHistory()
+            NavigationLink("⚔️") {
+                Rivals()
             }
             .font(.custom("History", fixedSize: 125))
             
