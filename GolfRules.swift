@@ -72,6 +72,7 @@ struct GolfRules: View {
             }
             NavigationLink("Go to golf game") {
                GolfGame()
+                    .navigationBarBackButtonHidden(true)
             }
             .font(.custom("golfball", fixedSize: 25))
         }

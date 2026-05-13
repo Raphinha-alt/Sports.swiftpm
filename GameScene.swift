@@ -20,18 +20,23 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
+    var hits = 0
         
     var ball = SKShapeNode()
     var sand = SKShapeNode()
     var pointer = SKShapeNode()
+    var goal = SKShapeNode()
     
     var velXFloat: CGFloat = 0
     var velYFloat: CGFloat = 0
-        
+    
+    let label = SKLabelNode(text: "")
+    let cameraF = SKCameraNode()
+    
     override func sceneDidLoad() {
         physicsWorld.contactDelegate = self
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
+        addChild(label)
     }
     
     override func didMove(to view: SKView) {
@@ -47,12 +52,13 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         ball.physicsBody?.linearDamping = 1
         ball.physicsBody?.restitution = 0.7
         ball.physicsBody?.collisionBitMask = 1
+        ball.physicsBody?.node?.name = "Gball"
         
 //        Sand Properties
         sand = SKShapeNode(rectOf: CGSize(width: 1000, height: 50))
         sand.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 1000, height: 50))
         sand.fillColor = .yellow
-        sand.position = CGPoint(x: size.width/4, y: 50)
+        sand.position = CGPoint(x: size.width/2, y: 50)
         
         
         sand.physicsBody?.isDynamic = false
@@ -63,9 +69,23 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         pointer.zPosition = 10
         pointer.fillColor = .white
         
+//      Goal
+        goal = SKShapeNode(rectOf: CGSize(width: 30, height: 40))
+        goal.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 30, height: 40))
+        goal.physicsBody?.isDynamic = false
+        goal.physicsBody?.collisionBitMask = 1
+        goal.physicsBody?.contactTestBitMask = 1
+        goal.position = CGPoint(x: size.width * 0.90, y: 90)
+        goal.fillColor = .gray
+        goal.physicsBody?.node?.name = "Ggoal"
+        
         addChild(ball)
         addChild(sand)
         addChild(pointer)
+        addChild(goal)
+        
+        self.camera = cameraF
+        self.addChild(cameraF)
         
     }
     
@@ -76,22 +96,18 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         var velX: Double = velXFloat
         var velY: Double = velYFloat
         
-        let vel = ball.physicsBody?.angularVelocity
         
         if ball.physicsBody?.angularVelocity ?? 0 <= 0.1, ball.physicsBody?.angularVelocity ?? 0 >= -0.1 {
-            
             if ball.frame.contains(location) {
-                print("ang: \(vel)")
                 
                 velX = CGFloat(cos(Double(pointer.zRotation)) * 20 * (powers))
                 velY = CGFloat(sin(Double(pointer.zRotation)) * 20 * (powers))
                 
-            ball.physicsBody?.applyImpulse(CGVector(dx: velX, dy: velY))
+                hits += 1
+                
+                ball.physicsBody?.applyImpulse(CGVector(dx: velX, dy: velY))
                 
             }
-        } else {
-            print("else ang: \(vel)")
-            print("\(powers)")
         }
     }
     
@@ -108,6 +124,16 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         pointer.position = ball.position
-        
+        cameraF.position = ball.position
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        if contact.bodyA.node?.name == "Ggoal" {
+            pointer.removeFromParent()
+            ball.removeFromParent()
+            label.text = "You finnished in \(hits) hits!"
+            print("goal")
+        }
+
     }
 }
