@@ -12,9 +12,11 @@ struct Rivals: View {
     @State var showAlert1 = false
     @State var showAlert2 = false
     @State var showAlert3 = false
+    @State var showAlert4 = false
     @State var R1 = ["madrid", "sword", "bayern"]
     @State var R2 = ["barca", "sword", "milan"]
     @State var R3 = ["Chelsea", "sword", "United"]
+    @State var R4 = ["liverpool", "sword", "City"]
     var body: some View {
         Text("Biggest Uefa Rivalries")
             .font(.largeTitle)
@@ -70,7 +72,27 @@ struct Rivals: View {
         .alert("Matches played: 195, Chelsea wins: 56, United wins: 83, Draws: 56", isPresented: $showAlert3) {
                                     }
             }
-            
+            .padding(35)
+            HStack{
+                ForEach(R4.indices, id: \.self) { index in
+                    Image(R4[index])
+                        .resizable()
+                        .frame(width: 150, height: 150)
+                }
+                Button("Show Stats") {
+                    showAlert4.toggle()
+                }
+        .font(.largeTitle)
+        .frame(width: 150, height: 150)
+        .background(Color.red)
+        .foregroundColor(.blue)
+        .alert("Matches played: 221, liverpool wins: 110, City wins: 63, Draws: 58", isPresented: $showAlert4) {
+                                    }
+            }
         }
+        NavigationLink("🏠") {
+            ContentView()
+        }
+        .font(.custom("house", fixedSize:80))
     }
 }

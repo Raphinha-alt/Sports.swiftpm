@@ -10,7 +10,7 @@ struct RuleView: View {
     var body: some View {
       Text("Soccer Rules")
             .font(.custom("football", fixedSize: 60))
-        VStack{
+        VStack(alignment: .leading, spacing: 9){
             Text("1. MatchDuration- 90 full minutes")
             Text("2. 2 45 havles- 45 minutes played, break, another 45 minutes then game over")
             Text("3. Injury time- time added to both 45 minute halves for lost time")
