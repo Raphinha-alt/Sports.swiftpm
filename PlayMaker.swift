@@ -319,32 +319,92 @@ class BasketballGameScene: SKScene {
 
     // MARK: - UI
     func createUI() {
-        makeButton("SHOOT", x: -170, name: "shoot")
-        makeButton("SIM", x: -80, name: "sim")
-        makeButton("RESET", x: 10, name: "reset")
-        makeButton("DEF", x: 100, name: "defense")
-        makeButton("SAVE", x: 190, name: "save")
 
-        resultLabel.fontSize = 18
+        // Better spacing for iPhone screens
+        let buttons: [(String, CGFloat, String)] = [
+            ("SHOOT", -140, "shoot"),
+            ("SIM", -70, "sim"),
+            ("RESET", 0, "reset"),
+            ("DEF", 70, "defense"),
+            ("SAVE", 140, "save")
+        ]
+
+        for (title, x, name) in buttons {
+            makeButton(title, x: x, name: name)
+        }
+
+        resultLabel.fontName = "AvenirNext-Bold"
+        resultLabel.fontSize = 17
         resultLabel.fontColor = .black
-        resultLabel.position = CGPoint(x: frame.midX, y: frame.minY + 90)
+        resultLabel.position = CGPoint(
+            x: frame.midX,
+            y: frame.minY + 95
+        )
+
         addChild(resultLabel)
     }
 
     func makeButton(_ text: String, x: CGFloat, name: String) {
-        let box = SKShapeNode(rectOf: CGSize(width: 85, height: 32))
-        box.fillColor = .darkGray
-        box.position = CGPoint(x: frame.midX + x, y: frame.minY + 50)
-        box.name = name
-        addChild(box)
 
-        let label = SKLabelNode(text: text)
-        label.fontSize = 12
+        // SHADOW
+        let shadow = SKShapeNode(
+            rectOf: CGSize(width: 58, height: 34),
+            cornerRadius: 9
+        )
+
+        shadow.fillColor = SKColor.black.withAlphaComponent(0.15)
+        shadow.strokeColor = .clear
+
+        shadow.position = CGPoint(
+            x: frame.midX + x + 1.5,
+            y: frame.minY + 53
+        )
+
+        addChild(shadow)
+
+        // BUTTON
+        let button = SKShapeNode(
+            rectOf: CGSize(width: 58, height: 34),
+            cornerRadius: 9
+        )
+
+        button.fillColor = SKColor(
+            red: 0.16,
+            green: 0.16,
+            blue: 0.18,
+            alpha: 1
+        )
+
+        button.strokeColor = SKColor(
+            red: 0.30,
+            green: 0.30,
+            blue: 0.34,
+            alpha: 1
+        )
+
+        button.lineWidth = 1.8
+
+        button.position = CGPoint(
+            x: frame.midX + x,
+            y: frame.minY + 55
+        )
+
+        button.name = name
+
+        addChild(button)
+
+        // LABEL
+        let label = SKLabelNode(fontNamed: "AvenirNext-Bold")
+
+        label.text = text
+        label.fontSize = 10
         label.fontColor = .white
         label.verticalAlignmentMode = .center
-        box.addChild(label)
-    }
+        label.horizontalAlignmentMode = .center
+        label.position = CGPoint(x: 0, y: -1)
 
+        button.addChild(label)
+    }
     // MARK: - TOUCH
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 
