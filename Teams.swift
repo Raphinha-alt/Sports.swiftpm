@@ -17,6 +17,7 @@ import SwiftUI
 struct Soccerteams: View {
     @State var choices = ["barca", "madrid", "bayern"]
     @State var choice = ["liverpool", "milan", "Paris"]
+    @State var choicess = ["United", "Chelsea", "ajax"]
     @State var pick = "mark"
     @State var result: String = ""
     @State var playerChoice: String = ""
@@ -83,6 +84,29 @@ struct Soccerteams: View {
                         }
                 }
             }
+            HStack {
+                ForEach(choicess.indices, id: \.self) { index in
+                    Image(choicess[index])
+                        .resizable()
+                        .frame(width: 150, height: 150)
+                        .onTapGesture {
+                            let Selected = choicess[index]
+                            pick = Selected
+                            
+                            if Selected == "United" {
+                                result = "20 premier leagues, 13 FA cups, 3 UCLs, 1 Europa league, 1 intercontiental cup"
+                            }
+                            else if Selected == "Chelsea" {
+                                result = "6 premier leagues, 8 FA cups, 2 UCLS, 2 Europa leagues, 1 intercontiental cup, 1 Club World Cup"
+                            }
+                            else{
+                                result = "36 Dutch titles, 20 KNVB cups, 4 UCLs, 1 Europa league, 1 intercontiental cup"
+                            }
+                            
+                        }
+                }
+            }
+            
         }
         NavigationLink("🏠") {
             ContentView()
