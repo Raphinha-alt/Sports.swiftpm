@@ -10,6 +10,7 @@ import SwiftUI
 struct SoccerPlayers: View {
     @State var choices = ["messi", "ronaldo", "Lewa"]
     @State var choice = ["neymar", "Kroos", "Iniesta"]
+    @State var choicess = ["Bale", "Maldini", "Ramos"]
     @State var pick = "mark"
     @State var result: String = ""
     @State var playerChoice: String = ""
@@ -76,6 +77,31 @@ struct SoccerPlayers: View {
                         }
                 }
             }
+            .padding(35)
+            HStack {
+                ForEach(choicess.indices, id: \.self) { index in
+                    Image(choicess[index])
+                        .resizable()
+                        .frame(width: 150, height: 150)
+                        .onTapGesture {
+                            let selected = choicess[index]
+                            pick = selected
+//
+                            if selected == "Bale" {
+                                result = "Matches, 394, goals- 141, assists- 101+, trohpieds-21"
+                                
+                            }
+                            else if selected == "Maldini" {
+                                result = "Matches-1028, goals-40, assists-44, trohpies-26"
+                            }
+                            else{
+                                
+                                result = "matches-1020, goals-141, assists-51, trophiies-29"
+                            }
+                        }
+                }
+            }
+            
         }
         NavigationLink("🏠") {
             ContentView()
