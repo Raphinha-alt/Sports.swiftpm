@@ -1,4 +1,11 @@
 //
+//  Teams.swift
+//  Sports
+//
+//  Created by Andrew S. Zhundrikov on 4/27/26.
+//
+
+//
 //  Players.swift
 //  Sports
 //
@@ -7,20 +14,20 @@
 
 import SwiftUI
 
-struct SoccerPlayers: View {
-    @State var choices = ["messi", "ronaldo", "Lewa"]
-    @State var choice = ["neymar", "Kroos", "Iniesta"]
-    @State var choicess = ["Bale", "Maldini", "Ramos"]
+struct Soccerteams: View {
+    @State var choices = ["barca", "madrid", "bayern"]
+    @State var choice = ["liverpool", "milan", "Paris"]
+    @State var choicess = ["United", "Chelsea", "ajax"]
     @State var pick = "mark"
     @State var result: String = ""
     @State var playerChoice: String = ""
     
     var body: some View {
-        Text("Pick a Player")
+        Text("Pick a Team")
             .font(.largeTitle)
         
         VStack {
-            Text("Player Choice")
+            Text("Team Choice")
             Image(pick)
                 .resizable()
                 .frame(width: 250, height: 250)
@@ -38,16 +45,16 @@ struct SoccerPlayers: View {
                             let selected = choice[index]
                             pick = selected
 //
-                            if selected == "neymar" {
-                                result = "Matches, 720, goals- 440, assists- 260, trohpieds-30"
+                            if selected == "liverpool" {
+                                result = "20 premier leauges, 6 ucls, 10 league cups, 8 FA cups, 3 europa league, 1 fifa intercontintential cup, 4 super cups, 16 community shields"
                                 
                             }
-                            else if selected == "Kroos" {
-                                result = "Matches-750, goals-75, assists-165, trohpies-30"
+                            else if selected == "milan" {
+                                result = "7 Ucls, 5 Coppa Italia, 8 Suppercoppa Italian, 5 super cups, 3 intercontiental cups"
                             }
                             else{
                                 
-                                result = "matches-900, goals-110, assists-190, trophiies-35"
+                                result = "1 Ucl, 1 super cup, 1 intercontinental cup, 13 ligue 1's, 16 Coupe de France,14 Trophee des Champions, 9 Couoe de la ligue"
                             }
                         }
                 }
@@ -63,49 +70,55 @@ struct SoccerPlayers: View {
                             let Selected = choices[index]
                             pick = Selected
                             
-                            if Selected == "messi" {
-                                result = "matches-1050+, goals-902, assists-407, trophies-45"
+                            if Selected == "barca" {
+                                result = "5 ucls, 28 laligas, 32 cdr, 16SCDE, 5 Uefa supercup,3 fifa intercontiential cup"
                             }
-                            else if Selected == "ronaldo" {
-                                result = "matches-1317, goals-969, assists-261, trohpies-37"
+                            else if Selected == "madrid" {
+                                result = "15 ucls,2 europa leagues,  36 laligas, 20 CDR, 13 SCDE, 6 Uefa supercup, 8 fifa intercontiential cup"
                             }
                             else{
                                 
-                                result = "matches 800=, goals-650+, assists-150+, trohpies- 25+"
+                                result = "6ucls, 34 bundesligas, 20DFb-pokls, 10 DFLsupercups, 2 Uefa supercup, 2 fifa intercontiential cup"
                             }
                             
                         }
                 }
             }
-            .padding(35)
             HStack {
                 ForEach(choicess.indices, id: \.self) { index in
                     Image(choicess[index])
                         .resizable()
                         .frame(width: 150, height: 150)
                         .onTapGesture {
-                            let selected = choicess[index]
-                            pick = selected
-//
-                            if selected == "Bale" {
-                                result = "Matches, 394, goals- 141, assists- 101+, trohpieds-21"
-                                
+                            let Selected = choicess[index]
+                            pick = Selected
+                            
+                            if Selected == "United" {
+                                result = "20 premier leagues, 13 FA cups, 3 UCLs, 1 Europa league, 1 intercontiental cup"
                             }
-                            else if selected == "Maldini" {
-                                result = "Matches-1028, goals-40, assists-44, trohpies-26"
+                            else if Selected == "Chelsea" {
+                                result = "6 premier leagues, 8 FA cups, 2 UCLS, 2 Europa leagues, 1 intercontiental cup, 1 Club World Cup"
                             }
                             else{
-                                
-                                result = "matches-1020, goals-141, assists-51, trophiies-29"
+                                result = "36 Dutch titles, 20 KNVB cups, 4 UCLs, 1 Europa league, 1 intercontiental cup"
                             }
+                            
                         }
                 }
             }
             
         }
+        HStack{
+            
+       
         NavigationLink("🏠") {
             ContentView()
         }
         .font(.custom("house", fixedSize:90))
+        NavigationLink("➡️") {
+         International()
+        }
+        .font(.custom("arrow", fixedSize: 80))
+        }
     }
 }
