@@ -90,9 +90,15 @@ struct Rivals: View {
                                     }
             }
         }
+        HStack{
         NavigationLink("🏠") {
             ContentView()
         }
         .font(.custom("house", fixedSize:80))
+        NavigationLink("➡️") {
+         International()
+        }
+        .font(.custom("arrow", fixedSize: 80))
+        }
     }
 }

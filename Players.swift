@@ -103,9 +103,18 @@ struct SoccerPlayers: View {
             }
             
         }
+        HStack{
+            
+       
         NavigationLink("🏠") {
             ContentView()
         }
         .font(.custom("house", fixedSize:90))
+        
+        NavigationLink("➡️") {
+         International()
+        }
+        .font(.custom("arrow", fixedSize: 80))
+        }
     }
 }
