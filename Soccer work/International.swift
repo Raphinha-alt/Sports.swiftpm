@@ -9,7 +9,8 @@ import SwiftUI
 
 struct International: View {
     var body: some View {
-       
+        Text("International football")
+            .font(.largeTitle)
             
         }
     }

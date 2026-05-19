@@ -109,6 +109,8 @@ struct Soccerteams: View {
             
         }
         HStack{
+            
+       
         NavigationLink("🏠") {
             ContentView()
         }
