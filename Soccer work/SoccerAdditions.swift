@@ -44,6 +44,7 @@ struct Soccermore: View {
             .font(.custom("History", fixedSize: 125))
             
             .padding(100)
+                
                 NavigationLink(destination: Soccerteams()) {
                     Image("Paris")
                         .resizable()
