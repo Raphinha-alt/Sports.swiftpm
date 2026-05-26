@@ -16,9 +16,20 @@ struct Stages: View {
                 Text("Groups/ all teams")
                 Image("Teams")
                     .resizable()
+                    .frame(width: 550, height: 550, alignment: .center)
+                
+                Text("Current Ranks")
+                Image("Ranks")
+                    .resizable()
                     .frame(width: 450, height: 450, alignment: .center)
+                
 
-                    
+            }
+            VStack{
+                Text("Big Teams")
+                Image("Favorites")
+                    .resizable()
+                    .frame(width: 450, height: 450, alignment: .center)
             }
         }
         

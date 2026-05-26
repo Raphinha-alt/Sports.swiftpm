@@ -23,6 +23,10 @@ struct International: View {
         }
         .font(.custom("arrow", fixedSize: 80))
             
+            NavigationLink("🌎") {
+            WorldCup()
+            }
+            .font(.custom("arrow", fixedSize: 80))
         }
 
         }
