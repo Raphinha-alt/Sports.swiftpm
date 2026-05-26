@@ -11,8 +11,11 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
     
     @Binding var powers: CGFloat
     
-    init(powers: Binding<CGFloat>, size: CGSize){
+    @Binding var clubSpecific: String
+    
+    init(powers: Binding<CGFloat>, clubSpecific: Binding<String> , size: CGSize){
         _powers = powers
+        _clubSpecific = clubSpecific
         super.init(size: size)
     }
     
@@ -95,10 +98,20 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         
         if ball.physicsBody?.angularVelocity ?? 0 <= 0.1, ball.physicsBody?.angularVelocity ?? 0 >= -0.1 {
             
+            var powerMultiplier: CGFloat = 2
+            
+            if clubSpecific == "Iron" {
+                powerMultiplier = 1
+            } else if clubSpecific == "Putter" {
+                powerMultiplier = 0.5
+            } else {
+                powerMultiplier = 2
+            }
+            
             if ball.frame.contains(location) {
                 
-                velX = CGFloat(cos(Double(pointer.zRotation)) * 20 * (powers))
-                velY = CGFloat(sin(Double(pointer.zRotation)) * 20 * (powers))
+                velX = CGFloat(cos(Double(pointer.zRotation)) * 20 * (powers) * powerMultiplier)
+                velY = CGFloat(sin(Double(pointer.zRotation)) * 20 * (powers) * powerMultiplier)
                 
                 hits += 1
                 
@@ -115,7 +128,6 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         if ball.frame.contains(location) == false  {
             
             pointer.zRotation = CGFloat(atan2(location.y - ball.position.y, location.x - ball.position.x))
-
         }
     }
     
@@ -127,8 +139,6 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
         if ball.physicsBody?.angularVelocity ?? 0 <= 0.5, ball.physicsBody?.angularVelocity ?? 0 >= -0.5 {
             ball.physicsBody?.angularVelocity = 0
         }
-        
-        
     }
     
     func didBegin(_ contact: SKPhysicsContact) {

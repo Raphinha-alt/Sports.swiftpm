@@ -25,7 +25,7 @@ struct GolfGame: View {
         }
         ZStack {
             GeometryReader() { geometry in
-                SpriteView(scene: GameScene(powers: $power, size: geometry.size))
+                SpriteView(scene: GameScene(powers: $power, clubSpecific: $pickedClub, size: geometry.size))
             }
         }
         .toolbar {
