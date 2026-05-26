@@ -30,6 +30,13 @@ struct Stages: View {
                 Image("Favorites")
                     .resizable()
                     .frame(width: 450, height: 450, alignment: .center)
+                
+                VStack{
+                    Text("Stadiums/hosts")
+                    Image("Hosts")
+                        .resizable()
+                        .frame(width: 450, height: 450, alignment: .center)
+                }
             }
         }
         
