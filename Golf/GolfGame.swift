@@ -12,7 +12,10 @@ struct GolfGame: View {
     @Environment(\.dismiss) private var dismiss
     
     @State var power: CGFloat = 1
-
+    
+    @State var pickedClub = "Driver"
+    let clubs = ["Driver", "Iron", "Putter"]
+    
     var body: some View {
         Button{
             dismiss()
@@ -20,25 +23,28 @@ struct GolfGame: View {
             Text("🏠")
                 .font(.custom("", size: 60))
         }
-        HStack {
+        ZStack {
             GeometryReader() { geometry in
-                SpriteView(scene: GameScene(powers: $power, size: geometry.size))
+                SpriteView(scene: GameScene(powers: $power, clubSpecific: $pickedClub, size: geometry.size))
             }
-            
         }
         .toolbar {
-            ToolbarItem(placement: .bottomBar){
-                
+            ToolbarItem(placement: .bottomBar) {
                 Slider(value: $power, in: 1...10, step: 1.0) {_ in
                     print("\(power)")
                 }
                 .frame(width: .infinity)
                 .padding()
             }
+            ToolbarItem(placement: .topBarLeading){
+                Picker("Pick your club", selection: $pickedClub){
+                    ForEach(clubs, id: \.self){ club in
+                        Text(club).tag(club)
+                            .font(.custom("My", size: 100))
+                    }
+                }
+            }
         }
     }
 }
 
-#Preview {
-    GolfGame(power: 1)
-}
