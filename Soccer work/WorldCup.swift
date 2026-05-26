@@ -9,10 +9,7 @@ import SwiftUI
 
 struct WorldCup: View {
     var body: some View {
-        Text("What you can learn before June 11th")
-            .font(.custom("", size: 60))
-        VStack{
-     
-        }
+        
+        
     }
 }
