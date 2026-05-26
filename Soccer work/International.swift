@@ -17,10 +17,17 @@ struct International: View {
         Image("World")
             .resizable()
             .frame(width: 600,height: 400)
-        
-        NavigationLink("➡️") {
-         WorldCup()
+        HStack {
+        NavigationLink("🇺🇳") {
+         Stages()
         }
         .font(.custom("arrow", fixedSize: 80))
+            
+            NavigationLink("🌎") {
+            WorldCup()
+            }
+            .font(.custom("arrow", fixedSize: 80))
+        }
+
         }
     }

@@ -9,10 +9,22 @@ import SwiftUI
 
 struct WorldCup: View {
     var body: some View {
-        Text("What you can learn before June 11th")
-            .font(.custom("", size: 60))
-        VStack{
-     
+        Text("World Cup Knowledge")
+            .font(Font.largeTitle.bold())
+        HStack{
+            VStack{
+                Text("Current holder")
+                Image("Argentina")
+                    .resizable()
+                    .frame(width: 400,height: 400)
+                
+                Text("All time winners")
+                Image("Worldwin")
+                    .resizable()
+                    .frame(width: 400,height: 400)
+            }
+            
         }
+        
     }
 }
