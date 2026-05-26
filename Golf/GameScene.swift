@@ -146,7 +146,6 @@ class GameScene: SKScene, @MainActor SKPhysicsContactDelegate {
             pointer.removeFromParent()
             ball.removeFromParent()
             label.text = "You've finnished in \(hits) hit(s)!"
-            print("goal")
         }
     }
     
